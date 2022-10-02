@@ -1,0 +1,12 @@
+
+        <%  if(products.length)
+        {%>
+           <% for(let product of products){%>
+               <h3><%= product.title %></h3>
+               <%} %>
+
+       <%} 
+   else
+       {%><div>No Products Available</div><%}
+%>
+

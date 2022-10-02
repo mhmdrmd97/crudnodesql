@@ -1,0 +1,123 @@
+-Model: Model gets data from database
+-View:renders the data ---> show it to client
+-Controller:connection between view and model
+
+
+create folder named Controllers (which is responsible for gettin and sending data from to model)
+
+mkdir Controllers ----> mkdir admin ---> type nul> ProductController.js
+
+inside this controller we export an action for example
+
+exports.getAddProductPage = (req,res) =>{
+
+const viewsData = {
+pageTitle:'Add Product'
+};
+res.render('AddProduct', viewsData);
+};
+
+and place getAddProductPage in the route instead
+import it as {getAddProductPage}=require(../Controllers/admin/ProductController)
+
+
+server page
+
+const path = require('path')
+const express = require('express');
+const mysql = require('mysql2');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const adminRoutes = require('./routes/admin')
+const homeRoutes = require('./routes/home')
+const rootDir = require('./utils/path')
+
+//initializing app
+const app = express();
+
+//setting engine
+app.set('view engine', 'ejs');
+app.set('views', 'client');
+
+
+//static files
+app.use(express.static(path.join(rootDir,'public')))
+app.use(express.static(path.join(rootDir,'node_modules', 'bootstrap', 'dist','css')))
+
+//security
+app.use(cors());
+app.use(bodyParser.urlencoded({extended:true}));
+
+//routes
+app.use('/products',adminRoutes);
+app.use(homeRoutes);
+app.use((req,res,next)=>{
+    res.status(404).render('404')
+})
+
+//server
+app.listen(5000,()=>{
+    console.log('server running on port 5000');
+})
+
+
+
+admin routes:
+const path = require('path');
+const express = require('express');
+const router = express.Router();
+const rootDir = require('../utils/path')
+const {getAddProductPage,postAddProduct}= require('../Controllers/admin/ProductController')
+
+router.get('/',getAddProductPage)
+router.post('/add',postAddProduct)
+
+
+module.exports= router;
+
+
+
+admin Controller:
+const productsData = require('../../utils/products')
+
+exports.getAddProductPage = (req,res,next)=>{
+    
+    const viewsData ={
+        products:productsData.products,
+        pageTitle: 'Product Page - Products List'
+    }
+
+    res.render('product',viewsData)
+ }
+
+ exports.postAddProduct = (req,res,next)=>{
+    console.log('Post request');
+    console.log(req.body);
+    
+    const product ={
+        title: req.body.title
+    }
+    
+    productsData.addProduct(product);
+    res.redirect('/');
+     }
+
+
+
+/////////////////////Models ////////////////////////////////
+
+
+mkdir Models ---> type nul>product.js
+
+inside it
+const products = []
+
+exports.saveProduct = (product)=>{
+    products.push(product);
+}
+
+exports.getAllProducts = ()=>{
+return products;
+}
+
+now u can use these functions in your controllers

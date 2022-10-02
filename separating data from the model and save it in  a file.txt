@@ -1,0 +1,31 @@
+remove data from model and save it in  a file 
+
+mkdir Data --->type nul> products.json
+
+inside model -->Product.js
+
+const fs=require('fs') for file handling
+const path = require('path'); //getting paths
+const rootDir = require('../utils/path') // root path
+
+
+in saveFile methode: 
+    const productsPath = path.join(rootDir,'Data','products.json'); // the file path
+	 fs.readFile(productsPath,(err,data)=>{ // reading the file
+        let products=[]; // we initilize empty producs array to push the data in it and write the pushed data in the json file
+        if(!err){ // if there is no any error let this array equals the array of objects inside the json file
+            products= JSON.parse(data);
+        }
+        products.push(product); // add the produc wich we recieve as parameter in this array
+       
+	 fs.writeFile(productsPath, JSON.stringify(products),(err)=>console.log(err))  // write the results in the file by cnverting it from js object to json string
+
+    })
+
+in getAllProdcts rename it to fetch all products // better name convention
+then inside it 
+
+const productsPath = path.join(rootDir,'Data','products.json'); //the path of the file
+fs.readFile(productsPath,(err,data)=>{ // reading the file
+    return JSON.parse(data);   returning its data as js object so we can use
+})

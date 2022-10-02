@@ -1,0 +1,24 @@
+Ejs
+
+npm i ejs
+
+in server.js:
+//setting engine
+app.set('view engine', 'ejs');
+app.set('views', 'client');
+
+creating templates of ejs extension
+
+instead of sendFile
+use render('namePage',{data:fhfh....}) method
+
+u use the data by <%= data %>
+
+use use logic by <% your logic here if,for,function... {%>  scope <%} %>
+
+
+layouts in the client folder
+
+create a folder called includes put your part
+call it by 
+<%- include('include/header.ejs') %>
